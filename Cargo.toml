@@ -1,0 +1,19 @@
+[package]
+name = "Noxia"
+version = "0.3.0"
+authors = ["Luna Frisch"]
+
+[dependencies]
+reqwest = "*"
+serde = "*"
+serde_derive = "*"
+serde_json = "*"
+tungstenite = "*"
+url = "*"
+threadpool = "*"
+regex = "*"
+dotenv = "*"
+
+[dependencies.diesel]
+version = "^1.0.0"
+features = ["postgres"]
