@@ -256,7 +256,7 @@ impl ThreadedClient {
 
                     last_msg_tick = Instant::now();
                 } else {
-                    println!("Failed to send message, sending back to message queue.");
+                    println!("Failed to send message, requeuing message.");
                     sender.send(data).unwrap();
                 }
             }
