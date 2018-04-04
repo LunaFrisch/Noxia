@@ -10,7 +10,6 @@ extern crate threadpool;
 extern crate regex;
 extern crate dotenv;
 
-use std::sync::mpsc::Sender;
 use std::env;
 
 use dotenv::dotenv;
@@ -24,7 +23,7 @@ mod commands;
 fn main() {
     dotenv().ok();
 
-    let mut c = ::fchat::client::ThreadedClient::new()
+    let _ = ::fchat::client::ThreadedClient::new()
         .account(env::var("ACCOUNT").unwrap().as_str())
         .password(env::var("PASSWORD").unwrap().as_str())
         .character(env::var("CHARACTER").unwrap().as_str())

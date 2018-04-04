@@ -81,7 +81,6 @@ impl ThreadedClient {
             ::fchat::event::OnEvent::ChannelMessage => { Arc::get_mut(&mut self.evnts_on_ch_msg).unwrap().insert(::utility::return_type_of(&s), Arc::new(s)); },
             ::fchat::event::OnEvent::PrivateMessage => { Arc::get_mut(&mut self.evnts_on_pm_msg).unwrap().insert(::utility::return_type_of(&s), Arc::new(s)); },
             ::fchat::event::OnEvent::ChannelAndPrivateMessage => { Arc::get_mut(&mut self.evnts_on_pm_and_ch_msg).unwrap().insert(::utility::return_type_of(&s), Arc::new(s)); },
-            _ => {},
         }
         self
     }
@@ -102,7 +101,7 @@ impl ThreadedClient {
             .password(self.password.as_str())
             .acquire();
 
-        let mut login_info = ::fchat::message::LoginBuilder::new()
+        let login_info = ::fchat::message::LoginBuilder::new()
             .method("ticket")
             .account(self.account.as_str())
             .ticket(login_ticket.as_str())
@@ -152,7 +151,7 @@ impl ThreadedClient {
                     ::fchat::message::ServerOpcodes::BRO => {},
                     ::fchat::message::ServerOpcodes::CDS => {},
                     ::fchat::message::ServerOpcodes::CHA => {},
-                    ::fchat::message::ServerOpcodes::CIU => { for (k, v) in evnts_ch_inv.iter() { v.execute(&json_data.clone(), &tx.clone()); } },
+                    ::fchat::message::ServerOpcodes::CIU => { for (_k, v) in evnts_ch_inv.iter() { let _ = v.execute(&json_data.clone(), &tx.clone()); } },
                     ::fchat::message::ServerOpcodes::CBU => {},
                     ::fchat::message::ServerOpcodes::CKU => {},
                     ::fchat::message::ServerOpcodes::COA => {},
@@ -168,9 +167,9 @@ impl ThreadedClient {
                     ::fchat::message::ServerOpcodes::HLO => {},
                     ::fchat::message::ServerOpcodes::ICH => {},
                     ::fchat::message::ServerOpcodes::IDN => {},
-                    ::fchat::message::ServerOpcodes::JCH => { for(k, v) in evnts_ch_jn.iter() { v.execute(&json_data.clone(), &tx.clone()); } },
+                    ::fchat::message::ServerOpcodes::JCH => { for(_k, v) in evnts_ch_jn.iter() { let _ = v.execute(&json_data.clone(), &tx.clone()); } },
                     ::fchat::message::ServerOpcodes::KID => {},
-                    ::fchat::message::ServerOpcodes::LCH => { for(k, v) in evnts_ch_lv.iter() { v.execute(&json_data.clone(), &tx.clone()); } },
+                    ::fchat::message::ServerOpcodes::LCH => { for(_k, v) in evnts_ch_lv.iter() { let _ = v.execute(&json_data.clone(), &tx.clone()); } },
                     ::fchat::message::ServerOpcodes::LIS => {},
                     ::fchat::message::ServerOpcodes::NLN => {},
                     ::fchat::message::ServerOpcodes::IGN => {},
@@ -181,8 +180,8 @@ impl ThreadedClient {
                     ::fchat::message::ServerOpcodes::PRI => {
                         let cmd_regex = regex::Regex::new(r#"^(~\w+)"#).unwrap();
 
-                        for (k, v) in evnts_pm_msg.iter() {
-                            v.execute(&json_data.clone(), &tx.clone());
+                        for (_k, v) in evnts_pm_msg.iter() {
+                            let _ = v.execute(&json_data.clone(), &tx.clone());
                         }
 
                         let msg_value = json_data["message"].take();
@@ -197,13 +196,13 @@ impl ThreadedClient {
 
                             for (k, v) in cmds_pm_and_ch_msg.iter() {
                                 if cmd == k.as_str() {
-                                    v.execute(&json_data.clone(), &tx.clone());
+                                    let _ = v.execute(&json_data.clone(), &tx.clone());
                                 }
                             }
 
                             for (k, v) in cmds_pm_msg.iter() {
                                 if cmd == k.as_str() {
-                                    v.execute(&json_data.clone(), &tx.clone());
+                                    let _ = v.execute(&json_data.clone(), &tx.clone());
                                 }
                             }
                         }
@@ -211,8 +210,8 @@ impl ThreadedClient {
                     ::fchat::message::ServerOpcodes::MSG => {
                         let cmd_regex = regex::Regex::new(r#"^(~\w+)"#).unwrap();
 
-                        for (k, v) in evnts_ch_msg.iter() {
-                            v.execute(&json_data.clone(), &tx.clone());
+                        for (_k, v) in evnts_ch_msg.iter() {
+                            let _ = v.execute(&json_data.clone(), &tx.clone());
                         }
 
                         let msg_value = json_data["message"].take();
@@ -227,13 +226,13 @@ impl ThreadedClient {
 
                             for (k, v) in cmds_pm_and_ch_msg.iter() {
                                 if cmd == k.as_str() {
-                                    v.execute(&json_data.clone(), &tx.clone());
+                                    let _ = v.execute(&json_data.clone(), &tx.clone());
                                 }
                             }
 
                             for (k, v) in cmds_ch_msg.iter() {
                                 if cmd == k.as_str() {
-                                    v.execute(&json_data.clone(), &tx.clone());
+                                    let _ = v.execute(&json_data.clone(), &tx.clone());
                                 }
                             }
                         }
@@ -248,7 +247,6 @@ impl ThreadedClient {
                     ::fchat::message::ServerOpcodes::TPN => {},
                     ::fchat::message::ServerOpcodes::UPT => {},
                     ::fchat::message::ServerOpcodes::VAR => {},
-                    _ => { println!("Unknown Opcode: {}", opcode); }
                 }
             });
 

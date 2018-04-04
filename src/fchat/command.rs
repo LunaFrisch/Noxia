@@ -29,6 +29,7 @@ macro_rules! command {
     };
 }
 
+#[allow(dead_code)]
 pub enum OnEvent {
     ChannelMessage,
     PrivateMessage,
