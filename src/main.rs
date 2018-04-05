@@ -14,6 +14,8 @@ use std::env;
 
 use dotenv::dotenv;
 
+mod models;
+mod schema;
 mod utility;
 mod flist;
 #[macro_use] mod fchat;
