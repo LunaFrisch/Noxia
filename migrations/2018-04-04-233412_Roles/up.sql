@@ -1,7 +1,7 @@
 -- Your SQL goes here
 
 CREATE TABLE Roles (
-    RoleName TEXT NOT NULL,
+    RoleName TEXT PRIMARY KEY,
     tip BOOLEAN NOT NULL,
     clockin BOOLEAN NOT NULL,
     clockout BOOLEAN NOT NULL,

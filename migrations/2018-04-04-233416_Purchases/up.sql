@@ -1,7 +1,7 @@
 -- Your SQL goes here
 
 CREATE TABLE Purchases (
-    UserId INTEGER NOT NULL,
+    UserId INTEGER PRIMARY KEY,
     gelbooru BOOLEAN NOT NULL,
     rule34 BOOLEAN NOT NULL,
     e621 BOOLEAN NOT NULL,
