@@ -9,6 +9,7 @@ extern crate url;
 extern crate threadpool;
 extern crate regex;
 extern crate dotenv;
+#[macro_use] extern crate diesel;
 
 use std::env;
 

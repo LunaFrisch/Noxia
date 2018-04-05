@@ -1,4 +1,5 @@
 #[derive(Queryable, Identifiable)]
+#[primary_key(UserId)]
 #[table_name="Profiles"]
 pub struct Profile {
     pub UserId: i32,
@@ -21,6 +22,7 @@ pub struct NewProfile<'a> {
 }
 
 #[derive(Queryable, Identifiable)]
+#[primary_key(UserId)]
 #[table_name="Packages"]
 pub struct UserPackages {
     pub UserId: i32,
@@ -35,6 +37,7 @@ pub struct NewUserPackages<'a> {
 }
 
 #[derive(Queryable)]
+#[primary_key(RoleName)]
 #[table_name="Roles"]
 pub struct Role {
     pub RoleName: String,
@@ -64,6 +67,7 @@ pub struct Role {
 }
 
 #[derive(Queryable, Identifiable)]
+#[primary_key(UserId)]
 #[table_name="Purchases"]
 pub struct UserPurchases {
     pub UserId: i32,
