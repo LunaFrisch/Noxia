@@ -1,7 +1,7 @@
 table! {
     packages (userid) {
         userid -> Int4,
-        packages -> Text,
+        packagelist -> Text,
     }
 }
 
