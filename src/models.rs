@@ -26,7 +26,7 @@ pub struct NewProfile<'a> {
 #[table_name="Packages"]
 pub struct UserPackages {
     pub UserId: i32,
-    pub Packages: String,
+    pub PackageList: String,
 }
 
 #[derive(Insertable)]
