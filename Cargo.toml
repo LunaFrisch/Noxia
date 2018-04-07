@@ -16,4 +16,4 @@ dotenv = "*"
 
 [dependencies.diesel]
 version = "^1.0.0"
-features = ["postgres"]
+features = ["postgres", "large-tables"]

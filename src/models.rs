@@ -1,46 +1,51 @@
-#[derive(Queryable, Identifiable)]
-#[primary_key(UserId)]
-#[table_name="Profiles"]
+use ::schema::profiles;
+use ::schema::packages;
+use ::schema::roles;
+use ::schema::purchases;
+
+#[derive(Queryable, Identifiable, AsChangeset)]
+#[primary_key(userid)]
+#[table_name="profiles"]
 pub struct Profile {
-    pub UserId: i32,
-    pub Name: String,
-    pub Role: String,
-    pub Favor: i32,
-    pub TotalClients: i32,
-    pub TotalVisits: i32,
+    pub userid: i32,
+    pub name: String,
+    pub role: String,
+    pub favor: i32,
+    pub totalclients: i32,
+    pub totalvisits: i32,
 }
 
 #[derive(Insertable)]
-#[table_name="Profiles"]
+#[table_name="profiles"]
 pub struct NewProfile<'a> {
-    pub UserId: &'a i32,
-    pub Name: &'a str,
-    pub Role: &'a str,
-    pub Favor: &'a i32,
-    pub TotalClients: &'a i32,
-    pub TotalVisits: &'a i32,
+    pub userid: &'a i32,
+    pub name: &'a str,
+    pub role: &'a str,
+    pub favor: &'a i32,
+    pub totalclients: &'a i32,
+    pub totalvisits: &'a i32,
 }
 
-#[derive(Queryable, Identifiable)]
-#[primary_key(UserId)]
-#[table_name="Packages"]
+#[derive(Queryable, Identifiable, Clone)]
+#[primary_key(userid)]
+#[table_name="packages"]
 pub struct UserPackages {
-    pub UserId: i32,
-    pub PackageList: String,
+    pub userid: i32,
+    pub packagelist: String,
 }
 
 #[derive(Insertable)]
-#[table_name="Packages"]
+#[table_name="packages"]
 pub struct NewUserPackages<'a> {
-    pub UserId: &'a i32,
-    pub Packages: &'a str,
+    pub userid: &'a i32,
+    pub packagelist: &'a str,
 }
 
 #[derive(Queryable)]
-#[primary_key(RoleName)]
-#[table_name="Roles"]
+//#[primary_key(rolename)]
+//#[table_name="roles"]
 pub struct Role {
-    pub RoleName: String,
+    pub rolename: String,
     pub tip: bool,
     pub clockin: bool,
     pub clockout: bool,
@@ -67,10 +72,10 @@ pub struct Role {
 }
 
 #[derive(Queryable, Identifiable)]
-#[primary_key(UserId)]
-#[table_name="Purchases"]
+#[primary_key(userid)]
+#[table_name="purchases"]
 pub struct UserPurchases {
-    pub UserId: i32,
+    pub userid: i32,
     pub gelbooru: bool,
     pub rule34: bool,
     pub e621: bool,
@@ -79,9 +84,9 @@ pub struct UserPurchases {
 }
 
 #[derive(Insertable)]
-#[table_name="Purchases"]
+#[table_name="purchases"]
 pub struct NewUserPurchases<'a> {
-    pub UserId: &'a str,
+    pub userid: &'a i32,
     pub gelbooru: &'a bool,
     pub rule34: &'a bool,
     pub e621: &'a bool,
