@@ -14,6 +14,8 @@ extern crate dotenv;
 use std::env;
 
 use dotenv::dotenv;
+use diesel::prelude::*;
+use diesel::pg::PgConnection;
 
 mod models;
 mod schema;
@@ -32,7 +34,9 @@ fn main() {
         .character(env::var("CHARACTER").unwrap().as_str())
         .server(env::var("SERVER").unwrap().as_str())
         .prefix(env::var("PREFIX").unwrap().as_str())
+        .database(PgConnection::establish(env::var("DATABASE_URL").unwrap().as_str()).expect(&format!("Error connecting to database.")))
         .register_event(::events::owner::accept_owner_invite, ::fchat::event::OnEvent::ChannelInvite)
+        .register_event(::events::all::add_new_user_on_join, ::fchat::event::OnEvent::ChannelJoin)
         .register_command(::commands::owner::set_role, ::fchat::command::OnEvent::ChannelMessage, "set_role")
         .register_command(::commands::owner::check_favor, ::fchat::command::OnEvent::PrivateMessage, "check_favor")
         .register_command(::commands::currency::tip, ::fchat::command::OnEvent::ChannelMessage, "tip")

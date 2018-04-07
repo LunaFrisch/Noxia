@@ -1,8 +1,12 @@
+use std::sync::Arc;
+use std::sync::Mutex;
 use std::sync::mpsc::Sender;
+
+use diesel::pg::PgConnection;
 
 use serde_json;
 
-command!(profile(data, output) {
+command!(profile(data, output, db) {
     let msg = ::fchat::message::MessageBuilder::new()
         .channel(data["channel"].as_str().unwrap())
         .push(r"Sorry, but the bot is currently in maintenance mode, while [user]Luna Frisch[/user] finishes tweaking the completely overhauled source.")
@@ -12,7 +16,7 @@ command!(profile(data, output) {
         .expect("Failed to queue message.");
 });
 
-command!(feedback(data, output) {
+command!(feedback(data, output, db) {
     let msg = ::fchat::message::MessageBuilder::new()
         .channel(data["channel"].as_str().unwrap())
         .push(r"Sorry, but the bot is currently in maintenance mode, while [user]Luna Frisch[/user] finishes tweaking the completely overhauled source.")
@@ -22,7 +26,7 @@ command!(feedback(data, output) {
         .expect("Failed to queue message.");
 });
 
-command!(gelbooru(data, output) {
+command!(gelbooru(data, output, db) {
     let msg = ::fchat::message::MessageBuilder::new()
         .channel(data["channel"].as_str().unwrap())
         .push(r"Sorry, but the bot is currently in maintenance mode, while [user]Luna Frisch[/user] finishes tweaking the completely overhauled source.")
@@ -32,7 +36,7 @@ command!(gelbooru(data, output) {
         .expect("Failed to queue message.");
 });
 
-command!(rule_thirty_four(data, output) {
+command!(rule_thirty_four(data, output, db) {
     let msg = ::fchat::message::MessageBuilder::new()
         .channel(data["channel"].as_str().unwrap())
         .push(r"Sorry, but the bot is currently in maintenance mode, while [user]Luna Frisch[/user] finishes tweaking the completely overhauled source.")
@@ -42,7 +46,7 @@ command!(rule_thirty_four(data, output) {
         .expect("Failed to queue message.");
 });
 
-command!(e_six_twenty_one(data, output) {
+command!(e_six_twenty_one(data, output, db) {
     let msg = ::fchat::message::MessageBuilder::new()
         .channel(data["channel"].as_str().unwrap())
         .push(r"Sorry, but the bot is currently in maintenance mode, while [user]Luna Frisch[/user] finishes tweaking the completely overhauled source.")
@@ -52,7 +56,7 @@ command!(e_six_twenty_one(data, output) {
         .expect("Failed to queue message.");
 });
 
-command!(yandere(data, output) {
+command!(yandere(data, output, db) {
     let msg = ::fchat::message::MessageBuilder::new()
         .channel(data["channel"].as_str().unwrap())
         .push(r"Sorry, but the bot is currently in maintenance mode, while [user]Luna Frisch[/user] finishes tweaking the completely overhauled source.")
@@ -62,7 +66,7 @@ command!(yandere(data, output) {
         .expect("Failed to queue message.");
 });
 
-command!(urban(data, output) {
+command!(urban(data, output, db) {
     let msg = ::fchat::message::MessageBuilder::new()
         .channel(data["channel"].as_str().unwrap())
         .push(r"Sorry, but the bot is currently in maintenance mode, while [user]Luna Frisch[/user] finishes tweaking the completely overhauled source.")
@@ -72,7 +76,7 @@ command!(urban(data, output) {
         .expect("Failed to queue message.");
 });
 
-command!(lmgtfy(data, output) {
+command!(lmgtfy(data, output, db) {
     let msg = ::fchat::message::MessageBuilder::new()
         .channel(data["channel"].as_str().unwrap())
         .push(r"Sorry, but the bot is currently in maintenance mode, while [user]Luna Frisch[/user] finishes tweaking the completely overhauled source.")

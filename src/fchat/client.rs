@@ -1,4 +1,5 @@
 use std::sync::Arc;
+use std::sync::Mutex;
 use std::sync::mpsc;
 use std::sync::mpsc::{Sender, Receiver};
 use std::collections::HashMap;
@@ -9,6 +10,7 @@ use url::Url;
 use serde_json;
 use threadpool;
 use regex;
+use diesel::pg::PgConnection;
 
 pub struct ThreadedClient {
     evnts_on_ch_jn: Arc<HashMap<String, Arc<::fchat::event::Event>>>,
@@ -25,6 +27,7 @@ pub struct ThreadedClient {
     password: String,
     character: String,
     server: String,
+    db: Option<Arc<Mutex<PgConnection>>>,
 }
 
 impl ThreadedClient {
@@ -45,6 +48,7 @@ impl ThreadedClient {
             password: "".to_string(),
             character: "".to_string(),
             server: "".to_string(),
+            db: None,
         }
     }
 
@@ -70,6 +74,11 @@ impl ThreadedClient {
 
     pub fn server<'a>(&'a mut self, s: &str) -> &'a mut Self {
         self.server = s.to_string();
+        self
+    }
+
+    pub fn database<'a>(&'a mut self, s: PgConnection) -> &'a mut Self {
+        self.db = Some(Arc::new(Mutex::new(s)));
         self
     }
 
@@ -136,6 +145,7 @@ impl ThreadedClient {
             let cmds_ch_msg = self.cmds_on_ch_msg.clone();
             let cmds_pm_msg = self.cmds_on_pm_msg.clone();
             let cmds_pm_and_ch_msg = self.cmds_on_pm_and_ch_msg.clone();
+            let db_conn = self.db.clone().unwrap();
 
             pool.execute(move || {
                 let (opcode, mut json) = msg.to_text().unwrap().split_at(3);
@@ -151,7 +161,7 @@ impl ThreadedClient {
                     ::fchat::message::ServerOpcodes::BRO => {},
                     ::fchat::message::ServerOpcodes::CDS => {},
                     ::fchat::message::ServerOpcodes::CHA => {},
-                    ::fchat::message::ServerOpcodes::CIU => { for (_k, v) in evnts_ch_inv.iter() { let _ = v.execute(&json_data.clone(), &tx.clone()); } },
+                    ::fchat::message::ServerOpcodes::CIU => { for (_k, v) in evnts_ch_inv.iter() { let _ = v.execute(&json_data.clone(), &tx.clone(), &db_conn.clone()); } },
                     ::fchat::message::ServerOpcodes::CBU => {},
                     ::fchat::message::ServerOpcodes::CKU => {},
                     ::fchat::message::ServerOpcodes::COA => {},
@@ -167,9 +177,9 @@ impl ThreadedClient {
                     ::fchat::message::ServerOpcodes::HLO => {},
                     ::fchat::message::ServerOpcodes::ICH => {},
                     ::fchat::message::ServerOpcodes::IDN => {},
-                    ::fchat::message::ServerOpcodes::JCH => { for(_k, v) in evnts_ch_jn.iter() { let _ = v.execute(&json_data.clone(), &tx.clone()); } },
+                    ::fchat::message::ServerOpcodes::JCH => { for(_k, v) in evnts_ch_jn.iter() { let _ = v.execute(&json_data.clone(), &tx.clone(), &db_conn.clone()); } },
                     ::fchat::message::ServerOpcodes::KID => {},
-                    ::fchat::message::ServerOpcodes::LCH => { for(_k, v) in evnts_ch_lv.iter() { let _ = v.execute(&json_data.clone(), &tx.clone()); } },
+                    ::fchat::message::ServerOpcodes::LCH => { for(_k, v) in evnts_ch_lv.iter() { let _ = v.execute(&json_data.clone(), &tx.clone(), &db_conn.clone()); } },
                     ::fchat::message::ServerOpcodes::LIS => {},
                     ::fchat::message::ServerOpcodes::NLN => {},
                     ::fchat::message::ServerOpcodes::IGN => {},
@@ -181,7 +191,7 @@ impl ThreadedClient {
                         let cmd_regex = regex::Regex::new(r#"^(~\w+)"#).unwrap();
 
                         for (_k, v) in evnts_pm_msg.iter() {
-                            let _ = v.execute(&json_data.clone(), &tx.clone());
+                            let _ = v.execute(&json_data.clone(), &tx.clone(), &db_conn.clone());
                         }
 
                         let msg_value = json_data["message"].take();
@@ -196,13 +206,13 @@ impl ThreadedClient {
 
                             for (k, v) in cmds_pm_and_ch_msg.iter() {
                                 if cmd == k.as_str() {
-                                    let _ = v.execute(&json_data.clone(), &tx.clone());
+                                    let _ = v.execute(&json_data.clone(), &tx.clone(), &db_conn.clone());
                                 }
                             }
 
                             for (k, v) in cmds_pm_msg.iter() {
                                 if cmd == k.as_str() {
-                                    let _ = v.execute(&json_data.clone(), &tx.clone());
+                                    let _ = v.execute(&json_data.clone(), &tx.clone(), &db_conn.clone());
                                 }
                             }
                         }
@@ -211,7 +221,7 @@ impl ThreadedClient {
                         let cmd_regex = regex::Regex::new(r#"^(~\w+)"#).unwrap();
 
                         for (_k, v) in evnts_ch_msg.iter() {
-                            let _ = v.execute(&json_data.clone(), &tx.clone());
+                            let _ = v.execute(&json_data.clone(), &tx.clone(), &db_conn.clone());
                         }
 
                         let msg_value = json_data["message"].take();
@@ -226,13 +236,13 @@ impl ThreadedClient {
 
                             for (k, v) in cmds_pm_and_ch_msg.iter() {
                                 if cmd == k.as_str() {
-                                    let _ = v.execute(&json_data.clone(), &tx.clone());
+                                    let _ = v.execute(&json_data.clone(), &tx.clone(), &db_conn.clone());
                                 }
                             }
 
                             for (k, v) in cmds_ch_msg.iter() {
                                 if cmd == k.as_str() {
-                                    let _ = v.execute(&json_data.clone(), &tx.clone());
+                                    let _ = v.execute(&json_data.clone(), &tx.clone(), &db_conn.clone());
                                 }
                             }
                         }
