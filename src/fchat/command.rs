@@ -18,7 +18,7 @@ impl Command for Arc<Command> {
 
 macro_rules! command {
     ($name:ident($data:ident, $out:ident, $db:ident) $code:block) => {
-        #[allow(non_camel_case_types)]
+        #[allow(non_camel_case_types, dead_code)]
         pub struct $name;
 
         impl $crate::fchat::command::Command for $name {
