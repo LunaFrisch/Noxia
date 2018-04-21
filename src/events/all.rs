@@ -9,12 +9,13 @@ use ::schema::profiles;
 use ::schema::profiles::dsl::*;
 
 event!(add_new_user_on_join(data, output, db) {
+    use diesel;
     use diesel::dsl::max;
 
     use ::models::Profile as Profile;
     use ::models::NewProfile as NewProfile;
 
-    let character = data["character"]["indentity"].as_str().unwrap();
+    let character = data["character"]["identity"].as_str().unwrap();
     let profile_search_result = profiles.filter(profiles::dsl::name.eq(character))
         .limit(1)
         .load::<Profile>(&*db.lock().unwrap())

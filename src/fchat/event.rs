@@ -8,6 +8,7 @@ use diesel::pg::PgConnection;
 
 pub trait Event: Send + Sync + 'static {
     fn execute(&self, &serde_json::Value, &Sender<String>, &Arc<Mutex<PgConnection>>) -> Result<(), &'static str>;
+    fn
 }
 
 impl Event for Arc<Event> {
